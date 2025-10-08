@@ -19,9 +19,8 @@ export function Footer() {
         </nav>
       </div>
 
-      <div className="container" style={{ marginTop: 16, color: 'var(--muted)', display:'flex', justifyContent:'space-between' }}>
+      <div className="container" style={{ marginTop: 16, color: 'var(--muted)', display: 'flex', justifyContent: 'center' }}>
         <span>© 2025 MovieMate. All rights reserved.</span>
-        <span />
       </div>
     </footer>
   )

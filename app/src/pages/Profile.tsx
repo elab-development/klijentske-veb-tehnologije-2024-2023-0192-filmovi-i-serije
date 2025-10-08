@@ -1,39 +1,3 @@
-// import { Section } from '../components/Section'
-// import { Button } from '../components/Button'
-
-// export function Profile(){
-//   return (
-//     <>
-//       <section className="section" style={{background:'#fff', color:'#111'}}>
-//         <div className="container">
-//           <div className="muted">Profile</div>
-//           <div className="h1" style={{color:'#111'}}>Your movie journey</div>
-//           <p className="muted" style={{color:'#444'}}>Track every film and show you've watched.</p>
-
-//           <div style={{display:'grid', gridTemplateColumns:'280px 1fr', gap:20, marginTop:20}}>
-//             <div className="card"><div style={{aspectRatio:'1/1', background:'#ddd', borderRadius:'var(--radius-md)'}}/></div>
-//             <div>
-//               <div className="badge">@aleksi</div>
-//               <div className="h2" style={{marginTop:8, color:'#111'}}>Alex Johnson</div>
-//               <p className="muted" style={{color:'#444'}}>Movie lover | Exploring one film at a time</p>
-//               <div style={{display:'flex', gap:8}}>
-//                 <Button variant="primary">Edit</Button>
-//                 <Button>Settings</Button>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-
-//       <Section title="Movies and shows you want to watch" subtitle="Your curated collection." dark right={<div style={{display:'flex', gap:8}}><Button>View</Button><Button>Add</Button></div>} />
-
-//       <Section title="Recently watched" subtitle="Your cinematic journey" />
-
-//       <Section title="Profile preferences" subtitle="Customize your experience" dark />
-//     </>
-//   )
-// }
-
 export function Profile(){
   return (
     <>
@@ -41,16 +5,18 @@ export function Profile(){
         <div className="container">
           <p className="muted" style={{color:'#666'}}>Profile</p>
           <h1 className="h1" style={{color:'#111'}}>Your movie journey</h1>
-          <p className="muted" style={{color:'#666',marginTop:6}}>Track every film and show you’ve watched. Your personal cinema library, always ready.</p>
+          <p className="muted" style={{color:'#666',marginTop:6}}>
+            Track every film and show you’ve watched. Your personal cinema library, always ready.
+          </p>
         </div>
       </section>
 
       <section className="section">
-        <div className="container grid-3">
-          <div className="card" style={{gridColumn:'span 1',aspectRatio:'1/1'}} />
-          <div className="card" style={{gridColumn:'span 2'}}>
-            <div className="badge">@alexj</div>
-            <h3 className="h2" style={{marginTop:10}}>Alex Johnson</h3>
+        <div className="container">
+          <div className="card" style={{padding:24}}>
+            <div className="badge">@username</div>
+            <h3 className="h2" style={{marginTop:10}}>Your Name</h3>
+            <p className="muted" style={{marginTop:6}}>you@example.com</p>
             <div style={{display:'flex',gap:10,marginTop:12}}>
               <button className="btn ghost">Edit</button>
               <button className="btn ghost">Settings</button>
@@ -59,26 +25,111 @@ export function Profile(){
         </div>
       </section>
 
-      <section className="section" style={{background:'var(--bg-0)'}}>
-        <div className="container grid-3">
-          <div className="card" style={{gridColumn:'span 2'}}>
-            <h3 className="h2">Recently watched</h3>
+      <section className="section" style={{background:'#fff',color:'#111'}}>
+        <div className="container">
+          <h3 className="h2" style={{color:'#111'}}>Recently watched</h3>
+          <div className="grid-3" style={{marginTop:12}}>
+            <div className="card" style={{padding:16}}>
+              <div className="h3" style={{color:'#111'}}>Inception</div>
+              <p className="muted">2010 • Sci-Fi, Thriller</p>
+              <div style={{display:'flex',gap:8,marginTop:10}}>
+                <button className="btn">Details</button>
+                <button className="btn">Rate</button>
+              </div>
+            </div>
+            <div className="card" style={{padding:16}}>
+              <div className="h3" style={{color:'#111'}}>Interstellar</div>
+              <p className="muted">2014 • Sci-Fi, Drama</p>
+              <div style={{display:'flex',gap:8,marginTop:10}}>
+                <button className="btn">Details</button>
+                <button className="btn">Rate</button>
+              </div>
+            </div>
+            <div className="card" style={{padding:16}}>
+              <div className="h3" style={{color:'#111'}}>The Dark Knight</div>
+              <p className="muted">2008 • Action, Crime</p>
+              <div style={{display:'flex',gap:8,marginTop:10}}>
+                <button className="btn">Details</button>
+                <button className="btn">Rate</button>
+              </div>
+            </div>
           </div>
-          <div className="card" />
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" style={{background:'#fff',color:'#111'}}>
         <div className="container">
-          <h3 className="h2">Profile preferences</h3>
-          <div className="grid-3" style={{marginTop:12}}>
-            <div className="card"><div className="h3">Update personal details</div></div>
-            <div className="card"><div className="h3">Change password</div></div>
-            <div className="card"><div className="h3">Discover your next favorite</div></div>
+          <h3 className="h2" style={{color:'#111'}}>Your ratings</h3>
+
+          <ul style={{listStyle:'none',padding:0,margin:'12px 0 0',display:'grid',gap:12}}>
+            <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div>
+                <strong style={{color:'#111'}}>Inception</strong>
+                <div className="muted">rated on 2025-10-09</div>
+              </div>
+              <div aria-label="rating 4 of 5" style={{fontSize:18}}>★★★★☆</div>
+            </li>
+
+            <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div>
+                <strong style={{color:'#111'}}>Interstellar</strong>
+                <div className="muted">rated on 2025-10-08</div>
+              </div>
+              <div aria-label="rating 5 of 5" style={{fontSize:18}}>★★★★★</div>
+            </li>
+
+            <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div>
+                <strong style={{color:'#111'}}>The Dark Knight</strong>
+                <div className="muted">rated on 2025-10-07</div>
+              </div>
+              <div aria-label="rating 4 of 5" style={{fontSize:18}}>★★★★☆</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="section" style={{background:'var(--bg-0)',color:'#fff'}}>
+        <div className="container" style={{textAlign:'center'}}>
+          <p className="muted" style={{color:'var(--muted)'}}>Settings</p>
+          <h2 className="h1" style={{color:'#fff'}}>Profile preferences</h2>
+          <p className="muted" style={{marginTop:6}}>Customize your experience</p>
+
+          <div className="grid-2" style={{marginTop:32,display:'grid',gap:20,gridTemplateColumns:'repeat(2,minmax(0,1fr))'}}>
+            <div className="card" style={{textAlign:'left',padding:24,background:'var(--bg-1)',border:'1px solid var(--border)'}}>
+              <p className="muted" style={{marginBottom:6}}>Personal</p>
+              <div className="h3" style={{color:'#fff'}}>Update personal details</div>
+              <p className="muted" style={{marginTop:4}}>Keep your profile current and accurate</p>
+              <a href="#" style={{display:'inline-flex',alignItems:'center',gap:4,marginTop:12,color:'#fff',fontWeight:600}}>
+                Update →
+              </a>
+            </div>
+
+            <div className="card" style={{textAlign:'left',padding:24,background:'var(--bg-1)',border:'1px solid var(--border)'}}>
+              <p className="muted" style={{marginBottom:6}}>Security</p>
+              <div className="h3" style={{color:'#fff'}}>Change password</div>
+              <p className="muted" style={{marginTop:4}}>Protect your account with a strong password</p>
+              <a href="#" style={{display:'inline-flex',alignItems:'center',gap:4,marginTop:12,color:'#fff',fontWeight:600}}>
+                Reset →
+              </a>
+            </div>
           </div>
         </div>
       </section>
+
+      <section className="section" style={{background:'var(--bg-0)',color:'#fff'}}>
+        <div className="container" style={{textAlign:'center'}}>
+          <h2 className="h1" style={{color:'#fff'}}>Discover your next favorite</h2>
+          <p className="muted" style={{marginTop:6}}>
+            Personalized recommendations based on your unique viewing history and ratings
+          </p>
+          <div style={{display:'flex',justifyContent:'center',gap:10,marginTop:20}}>
+            <button className="btn primary">Explore</button>
+            <button className="btn">Recommend</button>
+          </div>
+        </div>
+      </section>
+
     </>
   )
 }
-

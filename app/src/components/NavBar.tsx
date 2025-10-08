@@ -1,9 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import logo from '../assets/MovieMate - logoTransparent.png'
 
 
 export function NavBar() {
-  const { pathname } = useLocation()
   return (
     <header className="site-header">
       <div className="container navbar">

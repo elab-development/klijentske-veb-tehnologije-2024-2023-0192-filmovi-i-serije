@@ -9,16 +9,16 @@
   --fs-body: 16px;
   --fs-small: 14px;
 
-  --bg-0: #0E1211;      /* glavna tamna pozadina */
-  --bg-1: #141816;      /* tamni panel */
-  --bg-2: #1B201D;      /* kartice */
-  --text-0: #F5F7F6;    /* beli tekst */
-  --text-1: #CBD5D1;    /* sekundarni tekst */
-  --muted: #9AA6A0;     /* prigušen */
-  --border: #232826;    /* linije */
-  --brand: #0B66F1;     /* plavo dugme */
-  --accent: #EF4444;    /* crveno (Sign up, CTA) */
-  --card: #0F1312;      /* ploha kartica */
+  --bg-0: #0E1211;
+  --bg-1: #141816;
+  --bg-2: #1B201D;
+  --text-0: #F5F7F6;
+  --text-1: #CBD5D1;
+  --muted: #9AA6A0;
+  --border: #232826;
+  --brand: #0B66F1;
+  --accent: #EF4444;
+  --card: #0F1312;
 
   --container: 1200px;
   --radius-sm: 8px;

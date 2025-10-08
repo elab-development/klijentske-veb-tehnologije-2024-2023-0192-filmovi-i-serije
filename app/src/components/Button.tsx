@@ -1,5 +1,19 @@
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary'|'default' }
-export function Button({variant='default', ...props}:Props){
-  const cls = 'btn ' + (variant==='primary' ? 'primary' : '')
-  return <button className={cls} {...props} />
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'primary' | 'ghost' | 'danger'
+}
+
+export function Button({ variant, className = '', children, ...rest }: Props) {
+  const classes = [
+    'btn',
+    variant === 'primary' ? 'primary' : '',
+    variant === 'ghost' ? 'ghost' : '',
+    variant === 'danger' ? 'danger' : '',
+    className,
+  ].filter(Boolean).join(' ')
+
+  return (
+    <button className={classes} {...rest}>
+      {children}
+    </button>
+  )
 }

@@ -7,6 +7,10 @@ import { Movies } from '../pages/Movies'
 import { MovieDetails } from '../pages/MovieDetails'
 import { Login } from '../pages/Login'
 import { Register } from '../pages/Register'
+import { Privacy } from '../pages/Privacy'
+import { Terms } from '../pages/Terms'
+import { Cookies } from '../pages/Cookies'
+
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +24,9 @@ export const router = createBrowserRouter([
       { path: '/movies/:id', element: <MovieDetails /> },
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Register /> },
+      { path: '/privacy', element: <Privacy /> },
+      { path: '/terms', element: <Terms /> },
+      { path: '/cookies', element: <Cookies /> },
     ],
   },
 ])

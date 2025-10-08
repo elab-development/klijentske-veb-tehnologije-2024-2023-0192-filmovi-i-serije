@@ -1,21 +1,29 @@
 import { Link, useLocation } from 'react-router-dom'
+import logo from '../assets/MovieMate - logoTransparent.png'
 
-export function NavBar(){
+
+export function NavBar() {
   const { pathname } = useLocation()
   return (
-    <header style={{background:'var(--bg-0)', borderBottom:'1px solid #232826'}}>
-      <div className="container" style={{display:'flex', alignItems:'center', gap:16, height:64}}>
-        <Link to="/" className="h3" style={{color:'#fff'}}>MovieMate</Link>
-        <nav style={{display:'flex', gap:16, marginLeft:16}}>
+    <header className="site-header">
+      <div className="container navbar">
+        <Link to="/" className="navbar-brand h3" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <img src={logo} alt="MovieMate logo" style={{ height: 128, width: 'auto' }} />
+         
+        </Link>
+
+
+        <nav style={{ display: 'flex', gap: 16 }}>
           <Link to="/movies">Movies and Shows</Link>
           <Link to="/profile">Profile</Link>
           <Link to="/watchlist">Watchlist</Link>
         </nav>
-        <div style={{marginLeft:'auto', display:'flex', gap:8}}>
-          <Link to="/login" className="btn">Login</Link>
-          <Link to="/signup" className="btn" style={{borderColor:'transparent', background:'#ef4444', color:'#fff'}}>Sign up</Link>
+
+        <div className="navbar-spacer" />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Link to="/login" className="btn ghost">Login</Link>
+          <Link to="/signup" className="btn danger">Sign up</Link>
         </div>
-        <span className="muted" style={{marginLeft:12, fontSize:12}}>{pathname}</span>
       </div>
     </header>
   )

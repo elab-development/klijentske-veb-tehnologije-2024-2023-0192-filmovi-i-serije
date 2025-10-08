@@ -266,3 +266,43 @@ a {
 .site-footer a:hover {
     text-decoration: underline;
 }
+
+.faq-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+  background: var(--bg-2);
+}
+
+.faq-item.open {
+  background: var(--bg-1);
+}
+
+.faq-q {
+  font-weight: 700;
+}
+
+.faq-a {
+  color: var(--text-1);
+  margin-top: 6px;
+  font-size: var(--fs-small);
+}
+
+.faq-icon {
+  color: var(--muted);
+  font-weight: 700;
+  user-select: none;
+  font-size: 20px;
+  margin-top: 4px;
+}
+

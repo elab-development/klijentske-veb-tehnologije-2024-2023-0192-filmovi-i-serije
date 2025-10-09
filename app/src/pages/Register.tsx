@@ -37,11 +37,11 @@ export function Register() {
           <p className="muted" style={{ color: '#666' }}>Start</p>
           <h1 className="h1" style={{ color: '#111' }}>Create your account</h1>
 
-          <label className="label">Name</label>
+          <label className="label" style={{color: 'black'}}>Name</label>
           <input className="input" placeholder="Your name" />
-          <label className="label">Email</label>
+          <label className="label" style={{color: 'black'}}>Email</label>
           <input className="input" placeholder="you@example.com" />
-          <label className="label">Password</label>
+          <label className="label" style={{color: 'black'}}>Password</label>
           <input className="input" type="password" placeholder="••••••••" />
 
           <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>

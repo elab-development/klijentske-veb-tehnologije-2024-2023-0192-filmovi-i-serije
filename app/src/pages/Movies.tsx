@@ -1,50 +1,113 @@
-// import { Section } from '../components/Section'
-// import { Button } from '../components/Button'
-// import { Card } from '../components/Card'
-// import { Link } from 'react-router-dom'
-
-// export function Movies(){
-//   const items = [1,2,3]
-//   return (
-//     <>
-//       <Section title="Discover your next great watch" subtitle="Browse endless movies and TV shows." right={<div style={{display:'flex', gap:8}}><Button variant="primary">Browse</Button><Button>Filter</Button></div>} />
-//       <section className="section">
-//         <div className="container grid grid-3">
-//           {items.map(i=>(
-//             <Card key={i}>
-//               <div style={{height:160, background:'#e5e7eb', borderRadius:12, marginBottom:10}} />
-//               <div className="h3">Movie {i}</div>
-//               <div className="muted">Science fiction, thriller</div>
-//               <div style={{marginTop:8}}><Link to={`/movies/${i}`} className="btn">View</Link></div>
-//             </Card>
-//           ))}
-//         </div>
-//       </section>
-//     </>
-//   )
-// }
-
+import { useRef } from 'react'
+import { Section } from '../components/Section'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
 import { Link } from 'react-router-dom'
 
-export function Movies(){
+type Teaser = { id: number; title: string; subtitle: string }
+const items: Teaser[] = [
+  { id: 1, title: 'Inception', subtitle: 'Science fiction, thriller' },
+  { id: 2, title: 'Interstellar', subtitle: 'Science fiction, drama' },
+  { id: 3, title: 'The Dark Knight', subtitle: 'Action, crime' },
+  { id: 4, title: 'Dune', subtitle: 'Science fiction, adventure' },
+  { id: 5, title: 'Memento', subtitle: 'Mystery, thriller' },
+  { id: 6, title: 'Arrival', subtitle: 'Science fiction, drama' },
+  { id: 7, title: 'Blade Runner 2049', subtitle: 'Science fiction, neo-noir' },
+  { id: 8, title: 'Oppenheimer', subtitle: 'Biography, drama' },
+]
+
+export function Movies() {
+  const trackRef = useRef<HTMLDivElement>(null)
+
+  const scrollByCard = (dir: 'prev' | 'next') => {
+    const el = trackRef.current
+    if (!el) return
+    const card = el.querySelector<HTMLElement>('.carousel-card')
+    const step = card ? card.offsetWidth + 20 : 320
+    el.scrollBy({ left: dir === 'next' ? step : -step, behavior: 'smooth' })
+  }
+
   return (
-    <section className="section">
-      <div className="container">
-        <h1 className="h1" style={{marginBottom:20}}>Discover your next great watch</h1>
+    <>
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
+        <Section
+          title="Discover your next great watch"
+          subtitle="Browse endless movies and TV shows. Find exactly what you want to see."
+          right={
+            <div style={{ display: 'flex', gap: 8 }}>
+              <Button variant="primary">Browse</Button>
+              <Button className="on-light">Filter</Button>
+            </div>
+          }
+        />
+        <div className="container">
+          <div className="carousel">
+            <button aria-label="Prev" className="carousel-nav" onClick={() => scrollByCard('prev')}>‹</button>
 
-        <div style={{display:'flex',gap:10,marginBottom:20}}>
-          <button className="btn primary">Browse</button>
-          <button className="btn ghost">Filter</button>
-        </div>
+            <div className="carousel-track" ref={trackRef}>
+              {items.map(i => (
+                <div className="carousel-card" key={i.id}>
+                  <Card>
+                    <div style={{ height: 160, background: '#e5e7eb', borderRadius: 12, marginBottom: 12 }} />
+                    <div className="h3" style={{ color: '#e5e7eb' }}>{i.title}</div>
+                    <div className="muted" style={{ marginTop: 4 }}>{i.subtitle}</div>
+                    <div style={{ marginTop: 12 }}>
+                      <Link to={`/movies/${i.id}`} className="btn on-light">View</Link>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+            </div>
 
-        <div className="grid-3" style={{marginTop:10}}>
-          {[1,2,3,4,5,6].map(i=>(
-            <Link to={`/movies/${i}`} key={i} className="card" style={{aspectRatio:'3/4'}}>
-              <div className="muted">Movie {i}</div>
-            </Link>
-          ))}
+            <button aria-label="Next" className="carousel-nav" onClick={() => scrollByCard('next')}>›</button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="section" style={{ background: 'var(--bg-0)' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <p className="muted" style={{ marginBottom: 8 }}>Genres</p>
+          <h2 className="h2">Find movies and shows your way</h2>
+          <p className="lead" style={{ margin: '10px auto 24px' }}>
+            Filter content by genre to narrow down your perfect entertainment. Select from action, drama, comedy, and more.
+          </p>
+          <Button>Select</Button>
+        </div>
+      </section>
+
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 24 }}>
+          <div>
+            <p className="muted" style={{ color: '#666' }}>Sort</p>
+            <h2 className="h2" style={{ color: '#111' }}>Smart sorting options</h2>
+          </div>
+          <div>
+            <p className="muted" style={{ color: '#666' }}>
+              Choose how you want to view your entertainment. Newest releases or highest rated first.
+            </p>
+            <div style={{ marginTop: 12 }}>
+              <Button className="on-light">Sort</Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ background: 'var(--bg-0)' }}>
+        <div className="container">
+          <div className="cta-panel">
+            <h2 className="h2" style={{ textAlign: 'center' }}>Start tracking your favorites</h2>
+            <p className="muted" style={{ textAlign: 'center', marginTop: 8 }}>
+              Create an account to save your preferences and build the ultimate watchlist.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+              <Link to="/signup">
+                <Button variant="primary">Sign up</Button>
+              </Link>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

@@ -30,7 +30,7 @@ export function Profile(){
           <h3 className="h2" style={{color:'#111'}}>Recently watched</h3>
           <div className="grid-3" style={{marginTop:12}}>
             <div className="card" style={{padding:16}}>
-              <div className="h3" style={{color:'#111'}}>Inception</div>
+              <div className="h3" style={{color:'#ffffffff'}}>Inception</div>
               <p className="muted">2010 • Sci-Fi, Thriller</p>
               <div style={{display:'flex',gap:8,marginTop:10}}>
                 <button className="btn">Details</button>
@@ -38,7 +38,7 @@ export function Profile(){
               </div>
             </div>
             <div className="card" style={{padding:16}}>
-              <div className="h3" style={{color:'#111'}}>Interstellar</div>
+              <div className="h3" style={{color:'#ffffffff'}}>Interstellar</div>
               <p className="muted">2014 • Sci-Fi, Drama</p>
               <div style={{display:'flex',gap:8,marginTop:10}}>
                 <button className="btn">Details</button>
@@ -46,7 +46,7 @@ export function Profile(){
               </div>
             </div>
             <div className="card" style={{padding:16}}>
-              <div className="h3" style={{color:'#111'}}>The Dark Knight</div>
+              <div className="h3" style={{color:'#ffffffff'}}>The Dark Knight</div>
               <p className="muted">2008 • Action, Crime</p>
               <div style={{display:'flex',gap:8,marginTop:10}}>
                 <button className="btn">Details</button>
@@ -64,26 +64,26 @@ export function Profile(){
           <ul style={{listStyle:'none',padding:0,margin:'12px 0 0',display:'grid',gap:12}}>
             <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
               <div>
-                <strong style={{color:'#111'}}>Inception</strong>
+                <strong style={{color:'#ffffffff'}}>Inception</strong>
                 <div className="muted">rated on 2025-10-09</div>
               </div>
-              <div aria-label="rating 4 of 5" style={{fontSize:18}}>★★★★☆</div>
+              <div aria-label="rating 4 of 5" style={{fontSize:18, color:'#ffffffff'}}>★★★★☆</div>
             </li>
 
             <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
               <div>
-                <strong style={{color:'#111'}}>Interstellar</strong>
+                <strong style={{color:'#ffffffff'}}>Interstellar</strong>
                 <div className="muted">rated on 2025-10-08</div>
               </div>
-              <div aria-label="rating 5 of 5" style={{fontSize:18}}>★★★★★</div>
+              <div aria-label="rating 5 of 5" style={{fontSize:18, color:'#ffffffff'}}>★★★★★</div>
             </li>
 
             <li className="card" style={{padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
               <div>
-                <strong style={{color:'#111'}}>The Dark Knight</strong>
+                <strong style={{color:'#ffffffff'}}>The Dark Knight</strong>
                 <div className="muted">rated on 2025-10-07</div>
               </div>
-              <div aria-label="rating 4 of 5" style={{fontSize:18}}>★★★★☆</div>
+              <div aria-label="rating 4 of 5" style={{fontSize:18, color:'#ffffffff'}}>★★★★☆</div>
             </li>
           </ul>
         </div>

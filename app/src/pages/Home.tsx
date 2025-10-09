@@ -10,6 +10,7 @@ import feature3 from '../assets/home-features3.jpg'
 import iconStar from '../assets/star_shine.svg'
 import iconHistory from '../assets/history_2.svg'
 import iconTv from '../assets/tv_next.svg'
+import { Link } from 'react-router-dom'
 
 export function Home() {
   return (
@@ -35,7 +36,7 @@ export function Home() {
             Discover, rate, and manage your watchlist with one powerful app.
           </p>
           <div style={{ display: 'flex', gap: 12 }}>
-            <Button className="white">Get started</Button>
+            <Link to="/signup" className="btn white">Get started</Link>
             <Button>Learn more</Button>
           </div>
         </div>
@@ -103,9 +104,18 @@ export function Home() {
               style={{ position: 'absolute', top: 20, left: 20 }} />
             <div className="h3">Rate and review content</div>
             <p style={{ marginTop: 8 }}>Share your thoughts and see what others recommend.</p>
-            <a href="#" style={{ color: '#fff', marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Link
+              to="/profile"
+              style={{
+                color: '#fff',
+                marginTop: 12,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4
+              }}
+            >
               Review →
-            </a>
+            </Link>
           </div>
 
           <div
@@ -130,9 +140,18 @@ export function Home() {
               style={{ position: 'absolute', top: 20, left: 20 }} />
             <div className="h3">Manage your watchlist</div>
             <p style={{ marginTop: 8 }}>Keep track of what you want to watch next.</p>
-            <a href="#" style={{ color: '#fff', marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Link
+              to="/watchlist"
+              style={{
+                color: '#fff',
+                marginTop: 12,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4
+              }}
+            >
               Organize →
-            </a>
+            </Link>
           </div>
 
           <div
@@ -157,9 +176,18 @@ export function Home() {
               style={{ position: 'absolute', top: 20, left: 20 }} />
             <div className="h3">Get personalized recommendations</div>
             <p style={{ marginTop: 8 }}>Discover new titles based on your viewing history.</p>
-            <a href="#" style={{ color: '#fff', marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Link
+              to="/movies"
+              style={{
+                color: '#fff',
+                marginTop: 12,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4
+              }}
+            >
               Discover →
-            </a>
+            </Link>
           </div>
 
         </div>

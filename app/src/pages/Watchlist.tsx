@@ -36,6 +36,16 @@ export function Watchlist() {
   const watching = filtered.filter(i => i.status === 'watching')
   const planned = filtered.filter(i => i.status === 'planned')
   const done = filtered.filter(i => i.status === 'done')
+  
+  const recent     = done;                   // ovde bi kasnije mogao npr. sort po datumu završetka
+  const favorites  = done.filter(i => i.kind === 'movie'); // demo: “favorites” kao filmovi
+  const classics   = done.filter(i => i.year < 2000);      // demo: klasici pre 2000.
+
+  const activeList =
+    completedTab === 'recent'    ? recent :
+    completedTab === 'favorites' ? favorites :
+    classics
+
 
   return (
     <>
@@ -79,14 +89,14 @@ export function Watchlist() {
           <div className="grid-3" style={{ marginTop: 18 }}>
             {watching.length === 0 && (
               <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
-                <div className="h3" style={{ color: '#111' }}>No items are marked as “watching”.</div>
+                <div className="h3" style={{ color: '#666' }}>No items are marked as “watching”.</div>
                 <p className="muted" style={{ marginTop: 6 }}>Use filters or add titles to your watch queue.</p>
               </div>
             )}
             {watching.map(i => (
               <div key={i.id} className="card" style={{ padding: 16 }}>
                 <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
-                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <div className="h3" style={{ color: '#ffffffff' }}>{i.title}</div>
                 <p className="muted">{i.year}</p>
                 <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                   <button className="btn ghost">Update</button>
@@ -106,14 +116,14 @@ export function Watchlist() {
           <div className="grid-3" style={{ marginTop: 18 }}>
             {planned.length === 0 && (
               <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
-                <div className="h3" style={{ color: '#111' }}>Your planning list is empty.</div>
+                <div className="h3" style={{ color: '#666' }}>Your planning list is empty.</div>
                 <p className="muted" style={{ marginTop: 6 }}>Browse and add titles to watch later.</p>
               </div>
             )}
             {planned.map(i => (
               <div key={i.id} className="card" style={{ padding: 16 }}>
                 <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
-                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <div className="h3" style={{ color: '#ffffffff' }}>{i.title}</div>
                 <p className="muted">{i.year}</p>
                 <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                   <button className="btn ghost">Add to queue</button>
@@ -140,16 +150,16 @@ export function Watchlist() {
           </div>
 
           <div className="grid-3" style={{ marginTop: 18 }}>
-            {done.length === 0 && (
+            {activeList.length === 0 && (
               <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
-                <div className="h3" style={{ color: '#111' }}>No completed titles in view.</div>
+                <div className="h3" style={{ color: '#666' }}>No completed titles in view.</div>
                 <p className="muted" style={{ marginTop: 6 }}>Finish a title to see it here.</p>
               </div>
             )}
-            {done.map(i => (
+            {activeList.map(i => (
               <div key={i.id} className="card" style={{ padding: 16 }}>
                 <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
-                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <div className="h3" style={{ color: '#ffffffff' }}>{i.title}</div>
                 <p className="muted">{i.year}</p>
                 <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                   <button className="btn ghost">Review</button>
@@ -160,7 +170,7 @@ export function Watchlist() {
 
             <div className="card" style={{ gridColumn: '1 / -1', padding: 24 }}>
               <p className="muted">Achievements</p>
-              <h3 className="h2" style={{ marginTop: 6, color: '#111' }}>Track your viewing milestones</h3>
+              <h3 className="h2" style={{ marginTop: 6, color: '#' }}>Track your viewing milestones</h3>
               <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
                 <button className="btn ghost">Milestone</button>
                 <button className="btn ghost">Share</button>

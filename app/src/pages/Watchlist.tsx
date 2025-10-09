@@ -1,106 +1,171 @@
-// import { Section } from '../components/Section'
-// import { Button } from '../components/Button'
-// import { Card } from '../components/Card'
+import { useMemo, useState } from 'react'
 
-// export function Watchlist(){
-//   return (
-//     <>
-//       <section className="section" style={{background:'#fff', color:'#111'}}>
-//         <div className="container">
-//           <div className="muted">Track</div>
-//           <div className="h1" style={{color:'#111'}}>Your watchlist</div>
-//           <p className="muted" style={{color:'#444'}}>Organize and manage favorites.</p>
-//           <div style={{display:'flex', gap:8}}>
-//             <Button variant="primary">Browse</Button>
-//             <Button>Filter</Button>
-//           </div>
-//         </div>
-//       </section>
+type Item = {
+  id: number
+  title: string
+  kind: 'movie' | 'tv' | 'doc'
+  status: 'watching' | 'planned' | 'done'
+  year: number
+}
 
-//       <Section title="Currently watching" subtitle="Keep your progress updated" />
+const MOCK: Item[] = [
+  { id: 1, title: 'Inception', kind: 'movie', status: 'watching', year: 2010 },
+  { id: 2, title: 'The Mandalorian', kind: 'tv', status: 'watching', year: 2023 },
+  { id: 3, title: 'Planet Earth II', kind: 'doc', status: 'planned', year: 2016 },
+  { id: 4, title: 'Whiplash', kind: 'movie', status: 'planned', year: 2014 },
+  { id: 5, title: 'Interstellar', kind: 'movie', status: 'done', year: 2014 },
+  { id: 6, title: 'Dark', kind: 'tv', status: 'done', year: 2020 },
+  { id: 7, title: 'Free Solo', kind: 'doc', status: 'done', year: 2018 },
+]
 
-//       <section className="section">
-//         <div className="container grid grid-3">
-//           <Card><div className="h3">Mark your viewing status</div><p className="muted">Track episodes and scenes.</p></Card>
-//           <Card><div className="h3">Titles you want to watch next</div><p className="muted">Plan your future watching.</p></Card>
-//           <Card><div className="h3">Completed titles</div><p className="muted">Review finished content.</p></Card>
-//         </div>
-//       </section>
+export function Watchlist() {
+  const [category, setCategory] = useState<'all' | 'movie' | 'tv' | 'doc'>('all')
+  const [status, setStatus] = useState<'all' | 'watching' | 'planned' | 'done'>('all')
+  const [query, setQuery] = useState('')
+  const [completedTab, setCompletedTab] = useState<'recent' | 'favorites' | 'classics'>('recent')
 
-//       <Section title="Track your viewing milestones" subtitle="Celebrate achievements" dark />
-//     </>
-//   )
-// }
+  const filtered = useMemo(() => {
+    return MOCK.filter(it => {
+      const catOk = category === 'all' || it.kind === category
+      const stOk = status === 'all' || it.status === status
+      const qOk = query.trim() === '' || it.title.toLowerCase().includes(query.toLowerCase())
+      return catOk && stOk && qOk
+    })
+  }, [category, status, query])
 
-export function Watchlist(){
+  const watching = filtered.filter(i => i.status === 'watching')
+  const planned = filtered.filter(i => i.status === 'planned')
+  const done = filtered.filter(i => i.status === 'done')
+
   return (
     <>
-      <section className="section" style={{background:'#fff',color:'#111'}}>
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
         <div className="container">
-          <p className="muted" style={{color:'#666'}}>Track</p>
-          <h1 className="h1" style={{color:'#111'}}>Your watchlist</h1>
-          <div style={{display:'flex',gap:10,marginTop:18}}>
-            <button className="btn" style={{background:'var(--brand)',borderColor:'transparent',color:'#fff'}}>Browse</button>
-            <button className="btn">Filter</button>
+          <p className="muted" style={{ color: '#666' }}>Track</p>
+          <h1 className="h1" style={{ color: '#111' }}>Your watchlist</h1>
+
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 16, flexWrap: 'wrap' }}>
+            <select className="input" style={{ maxWidth: 220 }} value={category}
+              onChange={e => setCategory(e.target.value as any)}>
+              <option value="all">All categories</option>
+              <option value="movie">Movies</option>
+              <option value="tv">TV shows</option>
+              <option value="doc">Documentaries</option>
+            </select>
+
+            <select className="input" style={{ maxWidth: 220 }} value={status}
+              onChange={e => setStatus(e.target.value as any)}>
+              <option value="all">All statuses</option>
+              <option value="watching">Currently watching</option>
+              <option value="planned">Planned</option>
+              <option value="done">Completed</option>
+            </select>
+
+            <input className="input" style={{ maxWidth: 320 }} placeholder="Search title…"
+              value={query} onChange={e => setQuery(e.target.value)} />
+
+            <button className="btn primary" onClick={() => { setCategory('all'); setStatus('all'); setQuery('') }}>
+              Clear
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="section" style={{background:'var(--bg-0)'}}>
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
         <div className="container">
-          <p className="muted">Watch</p>
-          <h2 className="h1">Currently watching</h2>
-          <div style={{display:'flex',gap:12,marginTop:12}}>
-            <button className="btn ghost">View</button>
-            <button className="btn ghost">Update</button>
-          </div>
+          <p className="muted" style={{ color: '#666' }}>Watch</p>
+          <h2 className="h1" style={{ color: '#111' }}>Currently watching</h2>
 
-          <div className="grid-3" style={{marginTop:24}}>
-            <div className="card"><div className="h3">Movies</div></div>
-            <div className="card"><div className="h3">TV shows</div></div>
-            <div className="card"><div className="h3">Documentaries</div></div>
+          <div className="grid-3" style={{ marginTop: 18 }}>
+            {watching.length === 0 && (
+              <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
+                <div className="h3" style={{ color: '#111' }}>No items are marked as “watching”.</div>
+                <p className="muted" style={{ marginTop: 6 }}>Use filters or add titles to your watch queue.</p>
+              </div>
+            )}
+            {watching.map(i => (
+              <div key={i.id} className="card" style={{ padding: 16 }}>
+                <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
+                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <p className="muted">{i.year}</p>
+                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                  <button className="btn ghost">Update</button>
+                  <button className="btn ghost">Details</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container grid-3">
-          <div className="card">
-            <p className="muted">Progress</p>
-            <h3 className="h2" style={{margin:'6px 0 10px'}}>Mark your viewing status</h3>
-            <div style={{display:'flex',gap:10}}>
-              <button className="btn ghost">Track</button>
-              <button className="btn ghost">Recommendations</button>
-            </div>
-          </div>
-          <div className="card" style={{aspectRatio:'16/9'}} />
-          <div className="card">
-            <p className="muted">Plan</p>
-            <h3 className="h2" style={{margin:'6px 0 10px'}}>Titles you want to watch next</h3>
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
+        <div className="container">
+          <p className="muted" style={{ color: '#666' }}>Plan</p>
+          <h2 className="h1" style={{ color: '#111' }}>Titles you want to watch next</h2>
+
+          <div className="grid-3" style={{ marginTop: 18 }}>
+            {planned.length === 0 && (
+              <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
+                <div className="h3" style={{ color: '#111' }}>Your planning list is empty.</div>
+                <p className="muted" style={{ marginTop: 6 }}>Browse and add titles to watch later.</p>
+              </div>
+            )}
+            {planned.map(i => (
+              <div key={i.id} className="card" style={{ padding: 16 }}>
+                <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
+                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <p className="muted">{i.year}</p>
+                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                  <button className="btn ghost">Add to queue</button>
+                  <button className="btn ghost">Details</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="section" style={{background:'var(--bg-0)'}}>
+      <section className="section" style={{ background: '#fff', color: '#111' }}>
         <div className="container">
-          <p className="muted">Done</p>
-          <h2 className="h1">completed titles</h2>
+          <p className="muted" style={{ color: '#666' }}>Done</p>
+          <h2 className="h1" style={{ color: '#111' }}>Completed titles</h2>
+
           <div className="tabs">
-            <span className="tab active">Recent</span>
-            <span className="tab">Favorites</span>
-            <span className="tab">Classics</span>
+            <button className={`tab ${completedTab === 'recent' ? 'active' : ''}`}
+              onClick={() => setCompletedTab('recent')}>Recent</button>
+            <button className={`tab ${completedTab === 'favorites' ? 'active' : ''}`}
+              onClick={() => setCompletedTab('favorites')}>Favorites</button>
+            <button className={`tab ${completedTab === 'classics' ? 'active' : ''}`}
+              onClick={() => setCompletedTab('classics')}>Classics</button>
           </div>
-          <div className="grid-3" style={{marginTop:18}}>
-            <div className="card" style={{aspectRatio:'16/9'}} />
-            <div className="card">
+
+          <div className="grid-3" style={{ marginTop: 18 }}>
+            {done.length === 0 && (
+              <div className="card" style={{ gridColumn: '1 / -1', padding: 20 }}>
+                <div className="h3" style={{ color: '#111' }}>No completed titles in view.</div>
+                <p className="muted" style={{ marginTop: 6 }}>Finish a title to see it here.</p>
+              </div>
+            )}
+            {done.map(i => (
+              <div key={i.id} className="card" style={{ padding: 16 }}>
+                <div className="badge" style={{ marginBottom: 8 }}>{i.kind.toUpperCase()}</div>
+                <div className="h3" style={{ color: '#111' }}>{i.title}</div>
+                <p className="muted">{i.year}</p>
+                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                  <button className="btn ghost">Review</button>
+                  <button className="btn ghost">Rate</button>
+                </div>
+              </div>
+            ))}
+
+            <div className="card" style={{ gridColumn: '1 / -1', padding: 24 }}>
               <p className="muted">Achievements</p>
-              <h3 className="h2" style={{marginTop:8}}>Track your viewing milestones</h3>
-              <div style={{marginTop:12,display:'flex',gap:10}}>
+              <h3 className="h2" style={{ marginTop: 6, color: '#111' }}>Track your viewing milestones</h3>
+              <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
                 <button className="btn ghost">Milestone</button>
                 <button className="btn ghost">Share</button>
               </div>
             </div>
-            <div className="card" />
           </div>
         </div>
       </section>

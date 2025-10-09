@@ -17,6 +17,8 @@ export function NavBar(){
 
         <nav className="desktop-only" style={{display:'flex', gap:16, marginLeft:16}}>
           <NavLink to="/movies">Movies and Shows</NavLink>
+          <NavLink to="/genres/movie">Genres</NavLink>
+          <NavLink to="/discover/movie?page=1">Discover</NavLink>
           <NavLink to="/profile">Profile</NavLink>
           <NavLink to="/watchlist">Watchlist</NavLink>
         </nav>
@@ -45,6 +47,8 @@ export function NavBar(){
             </div>
             <NavLink to="/movies" className="mobile-link" onClick={() => setOpen(false)}>Movies and Shows</NavLink>
             <NavLink to="/profile" className="mobile-link" onClick={() => setOpen(false)}>Profile</NavLink>
+            <NavLink to="/genres/movie" className="mobile-link" onClick={() => setOpen(false)}>Genres</NavLink>
+            <NavLink to="/discover/movie?page=1" className="mobile-link" onClick={() => setOpen(false)}>Discover</NavLink>
             <NavLink to="/watchlist" className="mobile-link" onClick={() => setOpen(false)}>Watchlist</NavLink>
             <div style={{height:1, background:'var(--border)', margin:'8px 0'}}/>
             <Link to="/login" className="mobile-link" onClick={() => setOpen(false)}>Login</Link>

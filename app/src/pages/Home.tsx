@@ -195,11 +195,6 @@ export function Home() {
 
 
               <div style={{display:'flex', gap:8, padding:8}}>
-  <a href="/genres/movie">Genres Movies</a>
-  <a href="/genres/tv">Genres TV</a>
-  <a href="/discover/movie?page=1">Discover Movies</a>
-  <a href="/movie/550">Movie 550</a>
-  <a href="/tv/1399">TV 1399</a>
 </div>
 
     </>

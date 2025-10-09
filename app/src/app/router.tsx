@@ -10,6 +10,9 @@ import { Register } from '../pages/Register'
 import { Privacy } from '../pages/Privacy'
 import { Terms } from '../pages/Terms'
 import { Cookies } from '../pages/Cookies'
+import { Genres } from '../pages/Genres';
+import { Discover } from '../pages/Discover';
+import { TvDetails } from '../pages/TvDetails';
 
 
 export const router = createBrowserRouter([
@@ -27,6 +30,10 @@ export const router = createBrowserRouter([
       { path: '/privacy', element: <Privacy /> },
       { path: '/terms', element: <Terms /> },
       { path: '/cookies', element: <Cookies /> },
+      { path: 'genres/:type', element: <Genres /> },
+      { path: 'discover/:type', element: <Discover /> },
+      { path: 'movie/:id', element: <MovieDetails /> },
+      { path: 'tv/:id', element: <TvDetails /> },
     ],
   },
 ])

@@ -56,8 +56,14 @@ export function Movies() {
           subtitle="Browse endless movies and TV shows. Find exactly what you want to see."
           right={
             <div style={{ display: 'flex', gap: 8 }}>
-              <Button variant="primary">Browse</Button>
-              <Button className="on-light">Filter</Button>
+              <Link to="/genres/movie"   style={{
+    border: '1px solid #000',        // crni border
+    borderRadius: '6px',             // zaobljene ivice
+    padding: '6px 12px',             // unutrašnji razmak
+    textDecoration: 'none',          // ukloni underline
+    color: '#000',                   // boja teksta
+    display: 'inline-block'          // ponašanje kao dugme
+  }}>Browse</Link>
             </div>
           }
         />

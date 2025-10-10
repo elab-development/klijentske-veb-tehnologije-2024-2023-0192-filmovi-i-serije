@@ -21,8 +21,27 @@ export function MovieDetails() {
         {inWL ? 'Remove from Watchlist' : 'Add to Watchlist'}
       </button>
 
-      <h3>Videos</h3>
-      <ul>{data.videos?.results?.map((v:any)=><li key={v.id}>{v.name}</li>)}</ul>
+<h3>Videos</h3>
+<div style={{ display: 'grid', gap: 16, marginTop: 8 }}>
+  {data.videos?.results
+    ?.filter((v: any) => v.site === 'YouTube')
+    .slice(0, 3) // prikaži do 3
+    .map((v: any) => (
+      <div key={v.id}>
+        <p style={{ fontWeight: 500 }}>{v.name}</p>
+        <iframe
+          width="560"
+          height="315"
+          src={`https://www.youtube.com/embed/${v.key}`}
+          title={v.name}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    ))}
+</div>
+
 
       <h3>Cast</h3>
       <ul>{data.credits?.cast?.slice(0,10).map((c:any)=><li key={c.cast_id || c.credit_id}>{c.name}</li>)}</ul>

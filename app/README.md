@@ -1,11 +1,18 @@
 # MovieMate
 
-React + TypeScript projekat (Vite) sa React Router-om i modularnim CSS stilovima.
+## Instalacija i pokretanje projekta
 
-## Pokretanje projekta
-
+1. Kloniranje repozitorijuma
 ```bash
+git clone https://github.com/elab-development/klijentske-veb-tehnologije-2024-2023-0192-filmovi-i-serije.git
+
+2. Ulazak u folder aplikacije
+cd klijentske-veb-tehnologije-2024-2023-0192-filmovi-i-serije/app
+
+3. Instalacija zavisnosti
 npm install
-cp .env.example .env
-# kasnije dodati TMDB API ključ
+
+4. Pokretanje lokalnog servera
 npm run dev
+
+Otvoriti prikazani link (npr. http://localhost:5173) u browseru.

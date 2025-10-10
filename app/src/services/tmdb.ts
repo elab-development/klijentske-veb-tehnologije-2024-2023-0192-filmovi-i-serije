@@ -29,7 +29,8 @@ export const tmdb = {
   tv: (id: number) =>
     get(`/tv/${id}`, { append_to_response: 'videos,credits,recommendations' }),
 
-  // ⬇⬇⬇ NOVO: trending (day/week)
+  // trending (day/week)
   trending: (type: 'movie' | 'tv' = 'movie', window: 'day' | 'week' = 'week') =>
     get<{ page: number; results: any[] }>(`/trending/${type}/${window}`),
 };
+

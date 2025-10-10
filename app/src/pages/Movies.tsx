@@ -5,7 +5,13 @@ import { Card } from '../components/Card';
 import { Link } from 'react-router-dom';
 import { tmdb } from '../services/tmdb';
 
-type Teaser = { id: number; title: string; subtitle: string };
+type Teaser = {
+  id: number;
+  title: string;
+  subtitle: string;
+  poster_path?: string | null;
+  vote_average?: number;
+};
 
 export function Movies() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -17,7 +23,6 @@ export function Movies() {
   useEffect(() => {
     let cancel = false;
 
-    // Uzimamo trending filmove (week). Po želji može i popular: /movie/popular
     tmdb
       .trending('movie', 'week')
       .then((res: any) => {
@@ -27,8 +32,9 @@ export function Movies() {
           .map((m: any) => ({
             id: m.id,
             title: m.title,
-            // jednostavan podnaslov – možeš promeniti u release_date ili žanrove
             subtitle: `Rating ${m.vote_average?.toFixed(1) ?? '-'}`,
+            poster_path: m.poster_path,
+            vote_average: m.vote_average,
           }));
         setItems(mapped);
       })
@@ -56,14 +62,19 @@ export function Movies() {
           subtitle="Browse endless movies and TV shows. Find exactly what you want to see."
           right={
             <div style={{ display: 'flex', gap: 8 }}>
-              <Link to="/genres/movie"   style={{
-    border: '1px solid #000',        // crni border
-    borderRadius: '6px',             // zaobljene ivice
-    padding: '6px 12px',             // unutrašnji razmak
-    textDecoration: 'none',          // ukloni underline
-    color: '#000',                   // boja teksta
-    display: 'inline-block'          // ponašanje kao dugme
-  }}>Browse</Link>
+              <Link
+                to="/genres/movie"
+                style={{
+                  border: '1px solid #000',
+                  borderRadius: '6px',
+                  padding: '6px 12px',
+                  textDecoration: 'none',
+                  color: '#000',
+                  display: 'inline-block',
+                }}
+              >
+                Browse
+              </Link>
             </div>
           }
         />
@@ -85,22 +96,43 @@ export function Movies() {
             </button>
 
             <div className="carousel-track" ref={trackRef}>
-              {(loading ? Array.from({ length: 8 }).map((_, i) => ({
-                id: i,
-                title: 'Loading…',
-                subtitle: '',
-              })) : items).map((i) => (
+              {(loading
+                ? Array.from({ length: 8 }).map((_, i) => ({
+                    id: i,
+                    title: 'Loading…',
+                    subtitle: '',
+                    poster_path: null,
+                  }))
+                : items
+              ).map((i) => (
                 <div className="carousel-card" key={i.id}>
                   <Card>
-                    <div
-                      style={{
-                        height: 160,
-                        background: '#e5e7eb',
-                        borderRadius: 12,
-                        marginBottom: 12,
-                        opacity: loading ? 0.5 : 1,
-                      }}
-                    />
+                    {/* TMDB poster iznad naslova */}
+                    {i.poster_path ? (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w500${i.poster_path}`}
+                        alt={i.title}
+                        style={{
+                          width: '100%',
+                          height: 240,
+                          objectFit: 'cover',
+                          borderRadius: 12,
+                          marginBottom: 12,
+                          opacity: loading ? 0.5 : 1,
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          height: 240,
+                          background: '#e5e7eb',
+                          borderRadius: 12,
+                          marginBottom: 12,
+                          opacity: loading ? 0.5 : 1,
+                        }}
+                      />
+                    )}
+
                     <div className="h3" style={{ color: '#fff' }}>
                       {i.title}
                     </div>
@@ -108,7 +140,6 @@ export function Movies() {
                       {i.subtitle}
                     </div>
                     <div style={{ marginTop: 12 }}>
-                      {/* VAŽNO: ruta do tvojih detalja je /movie/:id */}
                       <Link to={`/movie/${i.id}`} className="btn on-light">
                         View
                       </Link>
@@ -139,19 +170,19 @@ export function Movies() {
             Filter content by genre to narrow down your perfect entertainment. Select from action,
             drama, comedy, and more.
           </p>
-          <Link 
-  to="/discover/movie?page=1"
-  style={{
-    border: '1px solid #fff',        // crni border
-    borderRadius: '6px',             // zaobljene ivice
-    padding: '6px 12px',             // unutrašnji razmak
-    textDecoration: 'none',          // ukloni underline
-    color: '#fff',                   // boja teksta
-    display: 'inline-block'          // ponašanje kao dugme
-  }}
->
-  Discover
-</Link>
+          <Link
+            to="/discover/movie?page=1"
+            style={{
+              border: '1px solid #fff',
+              borderRadius: '6px',
+              padding: '6px 12px',
+              textDecoration: 'none',
+              color: '#fff',
+              display: 'inline-block',
+            }}
+          >
+            Discover
+          </Link>
         </div>
       </section>
 
@@ -199,3 +230,4 @@ export function Movies() {
     </>
   );
 }
+

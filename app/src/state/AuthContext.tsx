@@ -1,21 +1,16 @@
+// state/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { User, type IUser } from '../models/users';
 
-type AuthUser = {
-  id: string;
-  name: string;
-  surname: string;
-  email: string;
-};
-
-type StoredUser = AuthUser & { password: string };
+type StoredUser = IUser & { password: string };
 
 type AuthContextValue = {
-  user: AuthUser | null;
+  user: User | null;
   isAuthenticated: boolean;
   signUp: (data: { name: string; surname: string; email: string; password: string }) => void;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
-  updateProfile: (data: Partial<Pick<AuthUser, 'name' | 'surname'>>) => void;
+  updateProfile: (data: Partial<Pick<IUser, 'name' | 'surname'>>) => void;
 };
 
 const Ctx = createContext<AuthContextValue | null>(null);
@@ -38,15 +33,15 @@ function saveSession(id: string | null) {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const id = loadSession();
     if (!id) return;
     const u = loadUsers().find(u => u.id === id);
     if (!u) return;
-    const { password, ...pub } = u;
-    setUser(pub);
+    // Instantiate domain model
+    setUser(new User(u.id, u.name, u.surname, u.email));
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({
@@ -62,15 +57,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       users.push(nu);
       saveUsers(users);
       saveSession(id);
-      setUser({ id, name, surname, email });
+      setUser(new User(id, name, surname, email));
     },
     signIn: (email, password) => {
       const users = loadUsers();
       const u = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
       if (!u) throw new Error('Invalid credentials');
       saveSession(u.id);
-      const { password: _, ...pub } = u;
-      setUser(pub);
+      setUser(new User(u.id, u.name, u.surname, u.email));
     },
     signOut: () => {
       saveSession(null);
@@ -83,7 +77,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (idx < 0) return;
       users[idx] = { ...users[idx], ...data };
       saveUsers(users);
-      setUser(prev => prev ? { ...prev, ...data } : prev);
+      const next = new User(
+        user.id,
+        data.name ?? user.name,
+        data.surname ?? user.surname,
+        user.email
+      );
+      setUser(next);
     },
   }), [user]);
 

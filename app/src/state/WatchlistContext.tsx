@@ -1,14 +1,14 @@
 // app/src/state/WatchlistContext.tsx
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 import { useAuth } from './AuthContext';
+import { RatingMap, type KindSingular } from '../models/watchlist';
 
-type KindSingular = 'movie' | 'tv';
 type KindPlural = 'movies' | 'tv';
 
 export type State = {
   movies: number[];
   tv: number[];
-  ratings: Record<string, number>; // key: `${kind}:${id}` -> 1..10
+  ratings: RatingMap; // class-based, serializable via toJSON
 };
 
 type Action =
@@ -29,7 +29,7 @@ type CtxValue = {
 const Ctx = createContext<CtxValue | null>(null);
 
 function emptyState(): State {
-  return { movies: [], tv: [], ratings: {} };
+  return { movies: [], tv: [], ratings: new RatingMap() };
 }
 
 function revive(raw: any): State {
@@ -37,38 +37,45 @@ function revive(raw: any): State {
   return {
     movies: Array.isArray(raw.movies) ? raw.movies.filter((n: any) => Number.isFinite(n)) : [],
     tv: Array.isArray(raw.tv) ? raw.tv.filter((n: any) => Number.isFinite(n)) : [],
-    ratings: raw.ratings && typeof raw.ratings === 'object' ? raw.ratings : {},
+    ratings: RatingMap.fromJSON(raw.ratings),
   };
 }
 
 function reducer(state: State, a: Action): State {
   switch (a.type) {
     case 'add': {
-      const list = a.kind === 'movies' ? state.movies : state.tv;
-      if (list.includes(a.id)) return state;
+      const already = a.kind === 'movies' ? state.movies.includes(a.id) : state.tv.includes(a.id);
+      if (already) return state;
       return a.kind === 'movies'
         ? { ...state, movies: [a.id, ...state.movies] }
         : { ...state, tv: [a.id, ...state.tv] };
     }
+
     case 'remove': {
       const list = a.kind === 'movies' ? state.movies : state.tv;
-      const key = `${a.kind === 'movies' ? 'movie' : 'tv'}:${a.id}`;
-      const { [key]: _drop, ...rest } = state.ratings;
+      const nextRatings = state.ratings.clone(); // avoid mutating existing reference
+      const singular: KindSingular = a.kind === 'movies' ? 'movie' : 'tv';
+      nextRatings.delete(singular, a.id);
       return a.kind === 'movies'
-        ? { ...state, movies: list.filter(x => x !== a.id), ratings: rest }
-        : { ...state, tv: list.filter(x => x !== a.id), ratings: rest };
+        ? { ...state, movies: list.filter(x => x !== a.id), ratings: nextRatings }
+        : { ...state, tv: list.filter(x => x !== a.id), ratings: nextRatings };
     }
+
     case 'rate': {
-      const key = `${a.kind}:${a.id}`;
-      return { ...state, ratings: { ...state.ratings, [key]: a.value } };
+      const nextRatings = state.ratings.clone();
+      nextRatings.set(a.kind, a.id, a.value);
+      return { ...state, ratings: nextRatings };
     }
+
     case 'unrate': {
-      const key = `${a.kind}:${a.id}`;
-      const { [key]: _omit, ...rest } = state.ratings;
-      return { ...state, ratings: rest };
+      const nextRatings = state.ratings.clone();
+      nextRatings.delete(a.kind, a.id);
+      return { ...state, ratings: nextRatings };
     }
+
     case 'reset':
       return a.next;
+
     default:
       return state;
   }
@@ -82,7 +89,6 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [state, dispatch] = useReducer(reducer, emptyState());
 
-  // load per-user on mount/when user changes
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey(user?.id ?? null));
@@ -93,7 +99,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user?.id]);
 
-  // persist per-user
+  // JSON.stringify will use RatingMap.toJSON automatically
   useEffect(() => {
     try {
       localStorage.setItem(storageKey(user?.id ?? null), JSON.stringify(state));
@@ -105,7 +111,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
     dispatch,
     has: (kind, id) => (kind === 'movie' ? state.movies.includes(id) : state.tv.includes(id)),
     rate: (kind, id, value) => dispatch({ type: 'rate', kind, id, value }),
-    getRating: (kind, id) => state.ratings[`${kind}:${id}`],
+    getRating: (kind, id) => state.ratings.get(kind, id),
   }), [state]);
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>;

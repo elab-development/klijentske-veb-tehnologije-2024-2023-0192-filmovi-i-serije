@@ -1,4 +1,3 @@
-// app/src/pages/Profile.tsx
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../state/AuthContext';
@@ -9,7 +8,7 @@ type MiniItem = { id: number; kind: 'movie' | 'tv'; title: string; year?: string
 
 export function Profile(){
   const { user, isAuthenticated, updateProfile, signOut } = useAuth();
-  const { state } = useWatchlist(); // { movies:number[], tv:number[], ratings: Record<'kind:id', number> }
+  const { state } = useWatchlist(); // { movies:number[], tv:number[], ratings: RatingMap }
 
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user?.name ?? '');
@@ -24,7 +23,7 @@ export function Profile(){
     return '@' + (mail.split('@')[0] || 'user');
   }, [user?.email]);
 
-  // Recently "watched": prikazujemo poslednje 3 iz watchlist-a (umesto placeholdera)
+  // Recently "watched": poslednje 3 iz watchlist-a
   const [recent, setRecent] = useState<MiniItem[]>([]);
   useEffect(() => {
     let cancel = false;
@@ -49,25 +48,23 @@ export function Profile(){
     return () => { cancel = true; };
   }, [state.movies, state.tv]);
 
-  // Ratings list: čitamo iz state.ratings i dovlačimo naslove
+  // Ratings list: koristi RatingMap.list()
   const [rated, setRated] = useState<Array<MiniItem & { score: number }>>([]);
   useEffect(() => {
     let cancel = false;
     async function run(){
-      const entries = Object.entries(state.ratings); // ['movie:123']=8
+      const entries = state.ratings.list(); // [{kind,id,value}]
       const first = entries.slice(0, 6);
       const out: Array<MiniItem & { score:number }> = [];
-      for (const [k, v] of first) {
-        const [kind, sid] = k.split(':');
-        const id = Number(sid);
-        const d = kind === 'movie' ? await tmdb.movie(id) : await tmdb.tv(id);
+      for (const r of first) {
+        const d = r.kind === 'movie' ? await tmdb.movie(r.id) : await tmdb.tv(r.id);
         out.push({
-          id,
-          kind: kind as 'movie' | 'tv',
+          id: r.id,
+          kind: r.kind,
           title: (d.title || d.name || 'Untitled') as string,
           year: ((d.release_date || d.first_air_date || '') as string).slice(0,4),
           genres: Array.isArray(d.genres) ? d.genres.map((g:any)=>g.name) : [],
-          score: Number(v),
+          score: Number(r.value),
         });
       }
       if (!cancel) setRated(out);
@@ -86,7 +83,7 @@ export function Profile(){
             <p className="muted" style={{color:'#666',marginTop:6}}>Login or create an account to view your profile.</p>
             <div style={{display:'flex',gap:10,marginTop:12}}>
               <Link className="btn primary" to="/login">Login</Link>
-              <Link className="btn" to="/signup">Sign up</Link>
+              <Link className="btn" to="/signup" style={{color: 'black'}}>Sign up</Link>
             </div>
           </div>
         </section>

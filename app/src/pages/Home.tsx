@@ -1,5 +1,10 @@
+// app/src/pages/Home.tsx
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Section } from '../components/Section'
 import { Button } from '../components/Button'
+import { tmdb } from '../services/tmdb'
+
 import heroImage from '../assets/home-hero.jpg'
 import iconAccess from '../assets/account_box.svg'
 import iconNavigation from '../assets/navigation.svg'
@@ -10,9 +15,36 @@ import feature3 from '../assets/home-features3.jpg'
 import iconStar from '../assets/star_shine.svg'
 import iconHistory from '../assets/history_2.svg'
 import iconTv from '../assets/tv_next.svg'
-import { Link } from 'react-router-dom'
 
 export function Home() {
+  const [movies, setMovies] = useState<any[]>([])
+  const [tv, setTv] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [err, setErr] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancel = false
+    async function run() {
+      try {
+        setLoading(true)
+        setErr(null)
+        const [m, t] = await Promise.all([
+          tmdb.trending('movie', 'week'),
+          tmdb.trending('tv', 'week'),
+        ])
+        if (cancel) return
+        setMovies(m?.results?.slice(0, 10) ?? [])
+        setTv(t?.results?.slice(0, 10) ?? [])
+      } catch (e: any) {
+        if (!cancel) setErr(e?.message || 'Failed to load')
+      } finally {
+        if (!cancel) setLoading(false)
+      }
+    }
+    run()
+    return () => { cancel = true }
+  }, [])
+
   return (
     <>
       <section
@@ -65,12 +97,12 @@ export function Home() {
               <p className="muted" style={{ marginTop: 8 }}>Create your account and start tracking in moments.</p>
             </div>
             <div className="card">
-              <img src={iconNavigation} alt="Access icon" width={48} height={48} />
+              <img src={iconNavigation} alt="Navigation icon" width={48} height={48} />
               <div className="h3">Smart content navigation</div>
               <p className="muted" style={{ marginTop: 8 }}>Filter titles by genre, popularity, and release date.</p>
             </div>
             <div className="card">
-              <img src={iconSearch} alt="Access icon" width={48} height={48} />
+              <img src={iconSearch} alt="Search icon" width={48} height={48} />
               <div className="h3">Advanced search</div>
               <p className="muted" style={{ marginTop: 8 }}>Uncover hidden gems with intelligent algorithms.</p>
             </div>
@@ -193,12 +225,54 @@ export function Home() {
         </div>
       </section>
 
+      <section className="section" style={{ background: 'var(--bg-0)' }}>
+        <div className="container">
+          <h2 className="h2">Trending Movies</h2>
+          {err && <div style={{ color:'#b00020', marginTop:8 }}>{err}</div>}
+          <div className="grid-3" style={{ marginTop: 16 }}>
+            {loading && movies.length === 0 && <div className="muted">Loading…</div>}
+            {movies.map(m => (
+              <Link key={m.id} to={`/movie/${m.id}`} className="card">
+                <img
+                  alt={m.title}
+                  src={m.poster_path ? `https://image.tmdb.org/t/p/w342${m.poster_path}` : '/placeholder.png'}
+                />
+                <div className="card-body">
+                  <div className="h4" style={{ marginBottom: 6 }}>{m.title}</div>
+                  <div className="muted">
+                    {(m.release_date || '').slice(0,4)} · {Number(m.vote_average || 0).toFixed(1)}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <div style={{display:'flex', gap:8, padding:8}}>
-</div>
+      <section className="section" style={{ background: '#fff' }}>
+        <div className="container">
+          <h2 className="h2">Trending TV</h2>
+          <div className="grid-3" style={{ marginTop: 16 }}>
+            {loading && tv.length === 0 && <div className="muted">Loading…</div>}
+            {tv.map(t => (
+              <Link key={t.id} to={`/tv/${t.id}`} className="card">
+                <img
+                  alt={t.name}
+                  src={t.poster_path ? `https://image.tmdb.org/t/p/w342${t.poster_path}` : '/placeholder.png'}
+                />
+                <div className="card-body">
+                  <div className="h4" style={{ marginBottom: 6 }}>{t.name}</div>
+                  <div className="muted">
+                    {(t.first_air_date || '').slice(0,4)} · {Number(t.vote_average || 0).toFixed(1)}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      <div style={{display:'flex', gap:8, padding:8}} />
     </>
-    
   )
-  
 }

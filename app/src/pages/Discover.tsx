@@ -21,7 +21,7 @@ export function Discover() {
 
     tmdb.discover<Paginated<Item>>(type as 'movie' | 'tv', params).then((res) => {
       if (canceled) return;
-      // Deduplikacija po ID-u (nekad dev StrictMode/odgovori naprave duple stavke)
+      // deduplikacija (ponekad se u StrictMode-u dupliraju renderi)
       const uniq = Array.from(new Map(res.results.map((r) => [r.id, r])).values());
       setData({ ...res, results: uniq });
     });
@@ -34,8 +34,26 @@ export function Discover() {
   if (!data) return <p>Učitavanje...</p>;
 
   const go = (p: number) => {
-    const next = Object.fromEntries(sp.entries());
-    next.page = String(p);
+    const next = new URLSearchParams(sp);
+    next.set('page', String(p));
+    setSp(next);
+  };
+
+  // 🔗 OVO JE KLJUČ: FilterBar vraća params -> upišemo u URL i resetujemo page
+  const applyFilters = (params: Record<string, string>) => {
+    const next = new URLSearchParams(sp);
+
+    // Očisti stare filtere koji nas zanimaju
+    const yearKey =
+      (type as 'movie' | 'tv') === 'movie' ? 'primary_release_year' : 'first_air_date_year';
+    ['vote_average.gte', 'sort_by', yearKey].forEach((k) => next.delete(k));
+
+    // Upisi nove (samo one koji imaju vrednost)
+    Object.entries(params).forEach(([k, v]) => {
+      if (v != null && v !== '') next.set(k, String(v));
+    });
+
+    next.set('page', '1'); // uvek resetuj paginaciju kad se filteri menjaju
     setSp(next);
   };
 
@@ -44,10 +62,9 @@ export function Discover() {
       <div className="container">
         <h2 className="h2">Discover: {type}</h2>
 
-        {/* Filteri koji menjaju URL → automatski se radi refetch */}
-        <FilterBar type={type as 'movie' | 'tv'} />
+        {/* FilterBar sada dobija onApply */}
+        <FilterBar type={type as 'movie' | 'tv'} onApply={applyFilters} />
 
-        {/* JEDAN grid (pre je bio dupliran, zato su se kartice ponavljale) */}
         <div
           style={{
             display: 'grid',

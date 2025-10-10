@@ -71,7 +71,7 @@ export function Register() {
             <div className="form-actions" style={{ display:'flex', gap:8, alignItems:'center' }}>
               <button className="btn primary" type="submit">Register</button>
               <span className="muted">Already have an account?</span>
-              <Link to="/login" className="btn">Login</Link>
+              <Link to="/login" className="btn" style={{color: 'black'}}>Login</Link>
             </div>
           </form>
         </div>

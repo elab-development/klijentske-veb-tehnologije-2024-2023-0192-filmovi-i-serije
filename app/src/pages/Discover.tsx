@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { tmdb } from '../services/tmdb';
+import { FilterBar } from '../components/FilterBar';
 
 type Paginated<T> = { page: number; total_pages: number; results: T[] };
 type Item = { id: number; title?: string; name?: string; vote_average?: number };
@@ -15,7 +16,19 @@ export function Discover() {
   useEffect(() => {
     const params: Record<string, string> = Object.fromEntries(sp.entries());
     if (!params.page) params.page = '1';
-    tmdb.discover<Paginated<Item>>(type as 'movie'|'tv', params).then(setData);
+
+    let canceled = false;
+
+    tmdb.discover<Paginated<Item>>(type as 'movie' | 'tv', params).then((res) => {
+      if (canceled) return;
+      // Deduplikacija po ID-u (nekad dev StrictMode/odgovori naprave duple stavke)
+      const uniq = Array.from(new Map(res.results.map((r) => [r.id, r])).values());
+      setData({ ...res, results: uniq });
+    });
+
+    return () => {
+      canceled = true;
+    };
   }, [type, sp.toString()]);
 
   if (!data) return <p>Učitavanje...</p>;
@@ -30,17 +43,39 @@ export function Discover() {
     <section className="section">
       <div className="container">
         <h2 className="h2">Discover: {type}</h2>
-        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(160px,1fr))', gap:12}}>
-          {data.results.map(m => (
-            <div key={m.id} className="card" style={{padding:10}}>
-              <div style={{fontWeight:600}}>{m.title ?? m.name}</div>
-              <div className="muted" style={{fontSize:12}}>Ocena: {m.vote_average}</div>
+
+        {/* Filteri koji menjaju URL → automatski se radi refetch */}
+        <FilterBar type={type as 'movie' | 'tv'} />
+
+        {/* JEDAN grid (pre je bio dupliran, zato su se kartice ponavljale) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+            gap: 12,
+          }}
+        >
+          {data.results.map((m) => (
+            <div key={m.id} className="card" style={{ padding: 10 }}>
+              <div style={{ fontWeight: 600 }}>{m.title ?? m.name}</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                Ocena: {m.vote_average}
+              </div>
             </div>
           ))}
         </div>
-        <div style={{display:'flex', gap:8, marginTop:12}}>
-          <button className="btn" disabled={page<=1} onClick={()=>go(page-1)}>Prev</button>
-          <button className="btn" disabled={page>=data.total_pages} onClick={()=>go(page+1)}>Next</button>
+
+        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+          <button className="btn" disabled={page <= 1} onClick={() => go(page - 1)}>
+            Prev
+          </button>
+          <button
+            className="btn"
+            disabled={page >= data.total_pages}
+            onClick={() => go(page + 1)}
+          >
+            Next
+          </button>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { tmdb } from '../services/tmdb';
 import { FilterBar } from '../components/FilterBar';
 
@@ -39,16 +39,14 @@ export function Discover() {
     setSp(next);
   };
 
-  // 🔗 OVO JE KLJUČ: FilterBar vraća params -> upišemo u URL i resetujemo page
+  // 🔗 FilterBar vraća params -> upišemo u URL i resetujemo page
   const applyFilters = (params: Record<string, string>) => {
     const next = new URLSearchParams(sp);
 
-    // Očisti stare filtere koji nas zanimaju
     const yearKey =
       (type as 'movie' | 'tv') === 'movie' ? 'primary_release_year' : 'first_air_date_year';
     ['vote_average.gte', 'sort_by', yearKey].forEach((k) => next.delete(k));
 
-    // Upisi nove (samo one koji imaju vrednost)
     Object.entries(params).forEach(([k, v]) => {
       if (v != null && v !== '') next.set(k, String(v));
     });
@@ -62,9 +60,10 @@ export function Discover() {
       <div className="container">
         <h2 className="h2">Discover: {type}</h2>
 
-        {/* FilterBar sada dobija onApply */}
+        {/* FilterBar dobija onApply */}
         <FilterBar type={type as 'movie' | 'tv'} onApply={applyFilters} />
 
+        {/* Grid rezultata */}
         <div
           style={{
             display: 'grid',
@@ -73,15 +72,23 @@ export function Discover() {
           }}
         >
           {data.results.map((m) => (
-            <div key={m.id} className="card" style={{ padding: 10 }}>
-              <div style={{ fontWeight: 600 }}>{m.title ?? m.name}</div>
-              <div className="muted" style={{ fontSize: 12 }}>
-                Ocena: {m.vote_average}
+            <Link
+              key={m.id}
+              to={`/${type}/${m.id}`} // /movie/:id ili /tv/:id
+              style={{ textDecoration: 'none' }}
+              aria-label={`Open details for ${(m.title ?? m.name) || 'item'}`}
+            >
+              <div className="card" style={{ padding: 10, cursor: 'pointer' }}>
+                <div style={{ fontWeight: 600, color: '#fff' }}>{m.title ?? m.name}</div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  Ocena: {m.vote_average?.toFixed(2) ?? '-'}
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
+        {/* Paginacija */}
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
           <button className="btn" disabled={page <= 1} onClick={() => go(page - 1)}>
             Prev
